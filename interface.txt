@@ -1,0 +1,372 @@
+SignIn
+-request 
+{
+    email : string,
+    password : string
+}
+
+- response
+success
+
+https status - 200 (OK)
+{
+    code: "SU",
+    message: "success"
+    token : "jwt...",
+    expiredDate : 12345656
+}
+
+failure
+
+htts status - 401 (Unauthorized)
+{
+    code : "SF"
+    message : "Sgin In failed"
+}
+
+
+- db error
+https status - 500 (internal server error)
+{
+    code : "DE",
+    message : "DB failed"
+}
+
+
+=======================================
+
+SignUp
+
+
+-request
+{
+    eamil : string,
+    password : String,
+    nickname : String,
+    telNumber : string,
+    address : string
+    addressdetail : string
+
+}
+
+
+-response
+success
+https status - 200 (OK)
+{
+    code: "SU",
+    message: "success"
+}
+
+failure
+
+
+- email format / password less than 8 character / wrong mobile foramt / mandatory field
+
+
+
+
+- email duplicated - 400 (bad request)
+{
+    code : "EE"
+    message : "existed email"
+}
+
+
+- db error
+https status - 500 (internal server error)
+{
+    code : "DE",
+    message : "DB failed"
+}
+
+
+
+
+=======================================
+
+
+
+
+
+weeklytop3
+
+response
+
+success
+https status - 200 (OK)
+{
+    code: "SU",
+    message: "success",
+    top3list : boardListItem[]
+}
+
+BoardListItem {
+    boardnumber : int,
+    title : string, 
+    content : string, 
+    boardtitleimage : String
+    favoriteCount : Int,
+    commentCount : Int, 
+    viewCOunt : Int,
+    writeDateTime : string,
+    writerNickname : string,
+    writerprofileImage : string,
+    
+}
+
+
+failure
+
+- db error
+https status - 500 (internal server error)
+{
+    code : "DE",
+    message : "DB failed"
+}
+
+
+
+
+=======================================
+currentList
+
+response
+
+success
+https status - 200 (OK)
+{
+    code: "SU",
+    message: "success",
+    currentList : boardListItem[]
+}
+
+BoardListItem {
+    boardnumber : int,
+    title : string, 
+    content : string, 
+    boardtitleimage : String
+    favoriteCount : Int,
+    commentCount : Int, 
+    viewCOunt : Int,
+    writeDateTime : string,
+    writerNickname : string,
+    writerprofileImage : string,
+    
+}
+
+
+failure
+
+- db error
+https status - 500 (internal server error)
+{
+    code : "DE",
+    message : "DB failed"
+}
+
+
+
+=======================================
+popularWordList 
+
+response
+
+success 
+https status - 200 (OK)
+{
+    code: "SU",
+    message: "success",
+    popularWordList : String[]
+}
+
+
+failure
+
+- db error
+https status - 500 (internal server error)
+{
+    code : "DE",
+    message : "DB failed"
+}
+
+
+
+=======================================
+
+
+
+searchList (검색 게시물 리스트)
+
+
+response
+
+success
+https status - 200 (OK)
+{
+    code: "SU",
+    message: "success",
+    searchlist : boardListItem[]
+}
+
+BoardListItem {
+    boardnumber : int,
+    title : string, 
+    content : string, 
+    boardtitleimage : String
+    favoriteCount : Int,
+    commentCount : Int, 
+    viewCOunt : Int,
+    writeDateTime : string,
+    writerNickname : string,
+    writerprofileImage : string,
+    
+}
+
+
+failure
+
+- db error
+https status - 500 (internal server error)
+{
+    code : "DE",
+    message : "DB failed"
+}
+
+
+
+
+
+
+
+=======================================
+relativeWordList 
+
+
+response
+
+success 
+https status - 200 (OK)
+{
+    code: "SU",
+    message: "success",
+    relativeWordList : String[]
+}
+
+
+failure
+
+- db error
+https status - 500 (internal server error)
+{
+    code : "DE",
+    message : "DB failed"
+}
+
+
+
+=======================================
+
+boardDetail
+
+
+success 
+https status - 200 (OK)
+{
+    code: "SU",
+    message: "success",
+    relativeWordList : String[]
+}
+
+
+
+failure
+
+- 
+https status - 400 (bad request)
+{
+    code : "NB"
+}
+
+
+
+https status - 500 (internal server error)
+{
+    code : "DE",
+    message : "DB failed"
+}
+
+
+
+=======================================
+boardDelete
+=======================================
+boardWrite
+=======================================
+boardUpdate
+=======================================
+favoriteList
+=======================================
+favorite
+=======================================
+postComment
+=======================================
+commentList
+=======================================
+getuser
+
+
+
+=======================================
+userBoardList
+
+response
+
+success
+https status - 200 (OK)
+{
+    code: "SU",
+    message: "success",
+    searchlist : boardListItem[]
+}
+
+BoardListItem {
+    boardnumber : int,
+    title : string, 
+    content : string, 
+    boardtitleimage : String
+    favoriteCount : Int,
+    commentCount : Int, 
+    viewCOunt : Int,
+    writeDateTime : string,
+    writerNickname : string,
+    writerprofileImage : string,
+    
+}
+
+
+failure
+
+- db error
+https status - 500 (internal server error)
+{
+    code : "DE",
+    message : "DB failed"
+}
+
+=======================================
+
+fileupload
+
+
+=======================================
+getFile
+
+
+
+
+
+and so on .... 
+
+
+
