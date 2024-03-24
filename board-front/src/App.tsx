@@ -1,6 +1,7 @@
 import BoardList from 'components/BoardList';
+import CommentItem from 'components/CommentItem';
 import Top3Item from 'components/Top3Item';
-import { latestBoardListMock, top3BoardListMock } from 'mocks';
+import { commentListMock, latestBoardListMock, top3BoardListMock } from 'mocks';
 import React from 'react';
 import './App.css';
 
@@ -8,11 +9,12 @@ function App() {
   return (
     <>
 
-      <div style={ { display: 'flex', justifyContent: 'center', gap: '24px' }}>
-        {top3BoardListMock.map(top3ListItem => <Top3Item top3ListItem={top3ListItem}/> )}
+    <div style = {{padding: '0 20px', display: 'flex', flexDirection: 'column', gap: '30px' }}> 
+      {commentListMock.map(commentListItem => <CommentItem commentListItem={commentListItem}/>)}
 
-      </div>
-      {latestBoardListMock.map(boardListItem => <BoardList boardListItem={boardListItem} />)}
+    </div>
+
+      
     </>
   );
 }
