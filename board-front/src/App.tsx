@@ -1,7 +1,8 @@
 import BoardList from 'components/BoardList';
 import CommentItem from 'components/CommentItem';
 import Top3Item from 'components/Top3Item';
-import { commentListMock, latestBoardListMock, top3BoardListMock } from 'mocks';
+import FavoriteItem from 'components/FavoriteItem';
+import { commentListMock, latestBoardListMock, top3BoardListMock, favoriteListMock } from 'mocks';
 import React from 'react';
 import './App.css';
 
@@ -9,8 +10,8 @@ function App() {
   return (
     <>
 
-    <div style = {{padding: '0 20px', display: 'flex', flexDirection: 'column', gap: '30px' }}> 
-      {commentListMock.map(commentListItem => <CommentItem commentListItem={commentListItem}/>)}
+    <div style = {{display: 'flex', flexDirection: 'column', columnGap: '30px' , rowGap: '20px'}}> 
+      {favoriteListMock.map(favoriteListItem => <FavoriteItem favoriteListItem={favoriteListItem}/>)}
 
     </div>
 
