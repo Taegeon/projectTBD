@@ -6,6 +6,7 @@ import { commentListMock, latestBoardListMock, top3BoardListMock, favoriteListMo
 import React, { useState } from 'react';
 import './App.css';
 import InputBox from 'components/InputBox';
+import Footer from 'layouts/Footer';
 
 function App() {
 
@@ -17,7 +18,7 @@ function App() {
     <>
 
       <InputBox label = 'email' type = 'text' placeholder='please type the email' value={value} error={false} setValue={setValue}/>
-
+      <Footer/>
       
     </>
   );
