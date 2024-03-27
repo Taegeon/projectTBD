@@ -38,7 +38,7 @@ export default function Footer() {
                 </div>
             </div>
             <div className='footer-bottom'>
-                <div className='footer-copy-right'> </div>
+                <div className='footer-copyright'> {'Copyright @ 2024 Taegeon. All Rights Reserved'}</div>
             </div>
         </div>
     </div>
