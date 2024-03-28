@@ -1,9 +1,16 @@
-import { MAIN_PATH, SEARCH_PATH } from 'constant';
+import { AUTH_PATH, MAIN_PATH, SEARCH_PATH, USER_PATH } from 'constant';
 import React, { ChangeEvent, useRef, useState, KeyboardEvent, useEffect } from 'react'
+import { useCookies } from 'react-cookie';
 import { useNavigate, useParams } from 'react-router-dom'
+import { useLoginUserStore } from 'stores';
 import './style.css'
 
 export default function Header() {
+
+
+  const { loginUser, setLoginUser, resetLoginUser} = useLoginUserStore();
+  const [cookies, setCookie] = useCookies();
+  const [isLogin, setLogin] = useState<boolean>(false);
 
   const navigate = useNavigate();
 
@@ -65,6 +72,34 @@ export default function Header() {
     )
   }
 
+  const MyPageButton = () =>{
+
+    const { userEmail } = useParams();
+
+    const onMyPageButtonClickHandler = () => {
+      if (!loginUser) return;
+      const { email } = loginUser;
+      navigate(USER_PATH(email));
+    };
+
+    const onSignOutButtonClickHandler = () => {
+      resetLoginUser();
+      navigate(MAIN_PATH());
+    };
+
+    const onSignInButtonClickHandler = () => {
+      navigate(AUTH_PATH());
+    };
+
+
+    if (isLogin && userEmail)
+    return <div className='white-button' onClick={onSignOutButtonClickHandler}>{'Sign out'}</div>;
+
+    if (isLogin)
+    return <div className='white-button' onClick={onMyPageButtonClickHandler}>{'My Page'}</div>;
+
+    return <div className='black-button' onClick={onSignInButtonClickHandler}>{'Log In'}</div>;
+  }
 
   return (
     <div id='header'>
@@ -80,6 +115,7 @@ export default function Header() {
         <div className='header-right-box'>
 
           <SearchButton/>
+          <MyPageButton/>
         </div>
 
       </div>
