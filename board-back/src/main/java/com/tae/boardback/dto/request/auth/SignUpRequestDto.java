@@ -1,5 +1,9 @@
 package com.tae.boardback.dto.request.auth;
 
+import org.springframework.http.ResponseEntity;
+
+import com.tae.boardback.dto.response.auth.SignUpResponseDto;
+
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -36,5 +40,9 @@ public class SignUpRequestDto {
 
     @NotNull @AssertTrue
     private Boolean agreedPersonal;
+
+    public static ResponseEntity<? super SignUpResponseDto> success() {
+        return null;
+    }
     
 }

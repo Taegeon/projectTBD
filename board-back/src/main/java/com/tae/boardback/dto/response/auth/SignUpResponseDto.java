@@ -1,6 +1,5 @@
 package com.tae.boardback.dto.response.auth;
 
-import java.net.http.HttpResponse.ResponseInfo;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
