@@ -2,6 +2,8 @@ package com.tae.boardback.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import com.tae.boardback.dto.request.auth.SignInRequestDto;
+import com.tae.boardback.dto.response.auth.SignInResponseDto;
 import com.tae.boardback.dto.request.auth.SignUpRequestDto;
 import com.tae.boardback.dto.response.auth.SignUpResponseDto;
 
@@ -31,4 +33,14 @@ public class AuthController {
         ResponseEntity<? super SignUpResponseDto> response = authService.signUp(requestBody);
         return response;
     }
+
+    @PostMapping("/sign-in")
+    public ResponseEntity<? super SignInResponseDto> signIn(
+        @RequestBody @Valid SignInRequestDto requestBody
+    ){
+        ResponseEntity<? super SignInResponseDto> response = authService.signIn(requestBody);
+        return response;
+    }
+
+
 }

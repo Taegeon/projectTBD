@@ -14,36 +14,33 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 
-import java.nio.charset.StandardCharsets;
-
 @Component
 public class JwtProvider {
-    @Value("${secret-key}")
 
-    private String secretkey = "secretkey";
+    @Value("${secret-key}")
+    private String secretKey;
 
     public String create(String email) {
-        Date expriedDate = Date.from(Instant.now().plus(1, ChronoUnit.HOURS));
-        Key key = Keys.hmacShaKeyFor(secretkey.getBytes(StandardCharsets.UTF_8));
+        Date expiryDate = Date.from(Instant.now().plus(1, ChronoUnit.HOURS));
+        Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
         String jwt = Jwts.builder()
-            .signWith(key, SignatureAlgorithm.ES256)
-            .setSubject(email).setIssuedAt(new Date()).setExpiration(expriedDate)
+            .signWith(key)
+            .setSubject(email)
+            .setIssuedAt(new Date())
+            .setExpiration(expiryDate)
             .compact();
-        
         return jwt;
-
     }
-
 
     public String validate(String jwt) {
         Claims claims = null;
-        Key key = Keys.hmacShaKeyFor(secretkey.getBytes(StandardCharsets.UTF_8));
+        Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
         try {
             claims = Jwts.parserBuilder()
-            .setSigningKey(key)
-            .build()
-            .parseClaimsJwt(jwt)
-            .getBody();
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(jwt)
+                .getBody();
         } catch (Exception exception) {
             exception.printStackTrace();
             return null;
