@@ -23,6 +23,10 @@ export default function Authentication() {
     const onSignInButtonClickHandler = () => {
 
     }
+    const onSignUpLinkClickHandler = () => {
+      setView('sign-up');
+    }
+
     const onPasswordButtonClickHandler = () => {
       if (passwordType === 'text') {
         setPasswordType('password');
@@ -56,15 +60,16 @@ export default function Authentication() {
             <InputBox ref={emailRef} label = '이메일 주소' type='text' placeholder='이메일 주소를 입력해 주세요' error={error} value={email} setValue={setEmail} onKeyDown={onEmailKeyDownHandler}/>
             <InputBox ref={passwordRef}label = '패스워드' type={passwordType} placeholder='비밀번호를 입력해주세요' error={error} value={password} setValue={setPassword} icon={passwordButtonIcon} onButtonClick={onPasswordButtonClickHandler} onKeyDown={onPasswordKeyDownHandler}/>
           </div>
-          <div className='auth-cart-bottom'>
+          <div className='auth-card-bottom'>
+            {error && 
             <div className='auth-sign-in-error-box'>
               <div className='auth-sign-in-error-message'>
                 {'이메일 주소 또는 비밀번호를 잘못 입력했습니다. \n 입력하신 내용을 다시 확인해주세요.'}
               </div>
-            </div>
+            </div>}
             <div className='black-large-full-button' onClick={onSignInButtonClickHandler}>{'로그인'}</div>
             <div className='auth-description-box'>
-              <div className='auth-description'>{'신규 사용자이신가요?'} <span className='auth-description-link'>{'회원가입'}</span></div>
+              <div className='auth-description'>{'신규 사용자이신가요?'} <span className='auth-description-link' onClick={onSignUpLinkClickHandler}>{'회원가입'}</span></div>
             </div>
           </div>
         </div>
