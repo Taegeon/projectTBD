@@ -62,6 +62,7 @@ public class WebSecurityConfig {
         configuration.addAllowedOrigin("*");
         configuration.addAllowedMethod("*");
         configuration.addExposedHeader("*");
+        configuration.addAllowedHeader("*");
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
