@@ -6,6 +6,7 @@ import InputBox from 'components/InputBox';
 import { MAIN_PATH } from 'constant';
 import React, { useRef, useState, KeyboardEvent, ChangeEvent } from 'react'
 import { useCookies } from 'react-cookie';
+import { Address, useDaumPostcodePopup } from 'react-daum-postcode';
 import { useNavigate } from 'react-router-dom';
 import './style.css'
 
@@ -145,7 +146,7 @@ export default function Authentication() {
     const [address, setAddress] = useState<string>('');
     const [addressDetail, setAddressDetail] = useState<string>('');
 
-
+    const [agreedPersonal, setAgreedPersonal] = useState<boolean>(false);
 
 
 
@@ -160,7 +161,7 @@ export default function Authentication() {
     const [isNicknameError, setNicknameError] = useState<boolean>(false);
     const [isTelNumberError, setTelNumberError] = useState<boolean>(false);
     const [isAddressError, setAddressError] = useState<boolean>(false);
-
+    const [isAgreedPersonalError, setAgreedPersonalError] = useState<boolean>(false);
 
 
     const [emailErrorMessage, setEmailErrorMessage] = useState<string>('');
@@ -175,34 +176,47 @@ export default function Authentication() {
     const [passwordButtonIcon, setPasswordButtonIcon] = useState<'eye-light-off-icon' | 'eye-light-on-icon'> ('eye-light-off-icon');
     const [passwordCheckButtonIcon, setPasswordCheckButtonIcon] = useState<'eye-light-off-icon' | 'eye-light-on-icon'> ('eye-light-off-icon');
 
+    const open = useDaumPostcodePopup();
 
     const onEmailChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
       const {value} = event.target;
       setEmail(value);
+      setEmailError(false);
+      setEmailErrorMessage('');
     }
 
     const onPasswordChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
       const {value} = event.target;
       setPassword(value);
+      setPasswordError(false);
+      setPasswordErrorMessage('');
     }
 
     const onPasswordCheckChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
       const {value} = event.target;
       setPasswordCheck(value);
+      setPasswordCheckError(false);
+      setPasswordCheckErrorMessage('');
     }
 
 
     const onNicknameChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
       const {value} = event.target;
       setNickname(value);
+      setNicknameError(false);
+      setNicknameErrorMessage('');
     }
     const onTelNumberChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
       const {value} = event.target;
       setTelNumber(value);
+      setTelNumberError(false);
+      setTelNumberErrorMessage('');
     }
     const onAddressChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
       const {value} = event.target;
       setAddress(value);
+      setAddressError(false);
+      setAddressErrorMessage('');
     }
     const onAddressDetailChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
       const {value} = event.target;
@@ -210,7 +224,10 @@ export default function Authentication() {
     }
 
 
-
+    const onAgreedPersonalClickHandler = () => {
+      setAgreedPersonal(!agreedPersonal);
+      setAgreedPersonalError(false);
+    }
 
 
 
@@ -239,7 +256,7 @@ export default function Authentication() {
     }
 
     const onAddressButtonClickHandler = () => {
-
+      open({ onComplete });
     }
 
     const onNextButtonClickHandler = () => {
@@ -265,7 +282,7 @@ export default function Authentication() {
     }
 
     const onSignUpButtonClickHandler = () => {
-
+      alert('회원가입 버튼');
     }
 
 
@@ -294,23 +311,37 @@ export default function Authentication() {
 
     const onPasswordCheckKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
       if (event.key !== 'Enter') return;
+      if (!nicknameRef.current) return;
       onNextButtonClickHandler();
+      nicknameRef.current.focus();
     }
 
     const onNicknameKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
       if (event.key !== 'Enter') return;
+      if (!telNumberRef.current) return;
+      telNumberRef.current.focus();
     }
+
     const onTelNumberKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
       if (event.key !== 'Enter') return;
+      onAddressButtonClickHandler();
     }
     const onAddressKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
       if (event.key !== 'Enter') return;
+      if (!addressDetailRef.current) return;
+      addressDetailRef.current.focus();
     }
     const onAddressDetailKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
       if (event.key !== 'Enter') return;
+      onSignUpButtonClickHandler();
     }
 
-
+    const onComplete = (data: Address) => {
+       const { address } = data;
+       setAddress(address);
+       if (!addressDetailRef.current) return;
+       addressDetailRef.current.focus();
+    }
 
 
     return (
@@ -347,10 +378,10 @@ export default function Authentication() {
               {page === 2 && (
                 <>
                 <div className='auth-consent-box'>
-                  <div className='auth-check-box'>
-                    <div className='check-ring-light-icon'></div>
+                  <div className='auth-check-box' onClick={onAgreedPersonalClickHandler}>
+                      <div className={`icon ${agreedPersonal? 'check-round-fill-icon' : 'check-ring-light-icon'}`}></div>
                   </div>
-                  <div className='auth-consent-title'>{'개인정보동의'}</div>
+                  <div className= {isAgreedPersonalError? 'auth-consent-title-error' : 'auth-consent-title'}>{'개인정보동의'}</div>
                   <div className='auth-consent-link'>{'더보기 >'}</div>
                 </div>
                 <div className='black-large-full-button' onClick={onSignUpButtonClickHandler}>{'회원가입'}</div>
