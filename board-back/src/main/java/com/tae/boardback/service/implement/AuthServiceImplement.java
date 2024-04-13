@@ -58,7 +58,8 @@ public class AuthServiceImplement implements AuthService{
 
             return ResponseDto.databaseError();
         }
-        return SignUpRequestDto.success();
+        //return SignUpRequestDto.success();
+        return SignUpResponseDto.success();
     }
 
     @Override

@@ -41,8 +41,8 @@ public class SignUpRequestDto {
     @NotNull @AssertTrue
     private Boolean agreedPersonal;
 
-    public static ResponseEntity<? super SignUpResponseDto> success() {
-        return null;
-    }
+    // public static ResponseEntity<? super SignUpResponseDto> success() {
+    //     return null;
+    // }
     
 }

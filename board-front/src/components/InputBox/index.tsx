@@ -43,7 +43,8 @@ const InputBox = forwardRef<HTMLInputElement, Props>((props: Props, ref) => {
                     )}
                     
                 </div>
-                {message !== undefined && <div className='inputbox-message'> {'password is longer than 8 char'}</div>}
+{/*              
+                {message !== undefined && <div className='inputbox-message'> {'password is longer than 8 char'}</div>} */}
                 
         </div>
     )
