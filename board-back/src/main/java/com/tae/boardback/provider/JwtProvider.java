@@ -22,9 +22,12 @@ public class JwtProvider {
 
     public String create(String email) {
         Date expiryDate = Date.from(Instant.now().plus(1, ChronoUnit.HOURS));
-        Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+
+
+        Key key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
+        //Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
         String jwt = Jwts.builder()
-            .signWith(key)
+            .signWith(key, SignatureAlgorithm.HS256)
             .setSubject(email)
             .setIssuedAt(new Date())
             .setExpiration(expiryDate)
@@ -34,7 +37,8 @@ public class JwtProvider {
 
     public String validate(String jwt) {
         Claims claims = null;
-        Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+        //Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+        Key key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
         try {
             claims = Jwts.parserBuilder()
                 .setSigningKey(key)
