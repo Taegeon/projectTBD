@@ -101,6 +101,7 @@ export default function Header() {
 
     const onSignOutButtonClickHandler = () => {
       resetLoginUser();
+      setCookie('accessToken', '', {path: MAIN_PATH(), expires: new Date()});
       navigate(MAIN_PATH());
     };
 
@@ -148,6 +149,12 @@ export default function Header() {
     const isUserPage = pathname.startsWith(USER_PATH(''));
     setUserPage(isUserPage);
   }, [pathname]);
+
+  useEffect(() => {
+    setLogin(loginUser !== null);
+  }, [loginUser])
+
+
 
 
   return (
