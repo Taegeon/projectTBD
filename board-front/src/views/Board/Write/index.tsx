@@ -37,11 +37,24 @@ export default function BoardWrite() {
 
           <div className='board-write-images-box'>
             <div className='board-write-image-box'>
-              <img className='board-write-image'/>
+              <img className='board-write-image' src='https://en.wikipedia.org/wiki/File:Hui_of_Pentagon_at_a_press_showcase_(190718).png'/>
               <div className='icon-button image-close'>
                 <div className='icon close-icon'></div>
               </div>
             </div>
+
+            
+            <div className='board-write-image-box'>
+              <img className='board-write-image' src='https://en.wikipedia.org/wiki/File:Hui_of_Pentagon_at_a_press_showcase_(190718).png'/>
+              <div className='icon-button image-close'>
+                <div className='icon close-icon'></div>
+              </div>
+            </div>
+
+
+
+
+
           </div>
 
         </div>
