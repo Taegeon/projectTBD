@@ -1,5 +1,8 @@
+import { MAIN_PATH } from 'constant';
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
-import { useBoardStore } from 'stores';
+import { useCookies } from 'react-cookie';
+import { useNavigate } from 'react-router-dom';
+import { useBoardStore, useLoginUserStore } from 'stores';
 import './style.css'
 
 export default function BoardWrite() {
@@ -12,7 +15,14 @@ export default function BoardWrite() {
   const {boardImageFileList, setBoardImageFileList} = useBoardStore();
   const {resetBoard} = useBoardStore();
 
+  const [cookies, setCookies] = useCookies();
+
+
   const [imageUrls, setImageUrls] = useState<string[]>([]);
+
+  const navigate = useNavigate();
+
+
 
   const onTitleChangeHandler = (event: ChangeEvent<HTMLTextAreaElement>) => {
     const {value} = event.target;
@@ -70,6 +80,12 @@ export default function BoardWrite() {
 
 
   useEffect(() => {
+    const accessToken = cookies.accessToken;
+
+    if (!accessToken) {
+      navigate(MAIN_PATH());
+      return;
+    }
     resetBoard();
   }, []);
 

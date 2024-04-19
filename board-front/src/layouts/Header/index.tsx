@@ -1,3 +1,7 @@
+import { fileUploadRequest, postBoardRequest } from 'apis';
+import { PostBoardsRequestDto } from 'apis/request/board';
+import { ResponseDto } from 'apis/response';
+import { PostBoardResponseDto } from 'apis/response/board';
 import { AUTH_PATH, BOARD_DETAIL_PATH, BOARD_PATH, BOARD_UPDATE_PATH, BOARD_WRITE_PATH, MAIN_PATH, SEARCH_PATH, USER_PATH } from 'constant';
 import React, { ChangeEvent, useRef, useState, KeyboardEvent, useEffect } from 'react'
 import { useCookies } from 'react-cookie';
@@ -123,7 +127,41 @@ export default function Header() {
   const UploadButton = () => {
 
     const { title, content, boardImageFileList, resetBoard } = useBoardStore(); 
-    const onUploadButtonClickHandler = () => {
+    
+    const postBoardResponse = (responseBody: PostBoardResponseDto | ResponseDto | null) => {
+      if (!responseBody) return;
+      const { code } = responseBody;
+      if (code === 'DBE') alert('데이터베이스 오류입니다.');
+      if (code === 'AF' || code === 'NU') navigate(AUTH_PATH());
+      if (code === 'VF') alert('제목과 내용은 필수입니다.');
+      if (code !== 'SU') return;
+
+      resetBoard();
+      if (!loginUser) return;
+      const { email } = loginUser;
+      navigate(USER_PATH(email));
+    }
+
+    const onUploadButtonClickHandler = async() => {
+      const accessToken = cookies.accessToken;
+      if (!accessToken) return;
+
+      const boardImageList: string[] = [];
+      
+      for (const file of boardImageFileList) {
+        const data = new FormData();
+        data.append('file', file);
+
+        const url = await fileUploadRequest(data);
+        if (url) boardImageList.push(url);
+      }
+
+      const requestBody: PostBoardsRequestDto = {
+        title, content, boardImageList
+      }
+
+      postBoardRequest(requestBody, accessToken).then(postBoardResponse);
+
 
     }
 
