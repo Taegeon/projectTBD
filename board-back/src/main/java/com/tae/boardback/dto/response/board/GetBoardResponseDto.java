@@ -1,4 +1,4 @@
-package com.tae.boardback.dto.request.board;
+package com.tae.boardback.dto.response.board;
 
 import java.util.ArrayList;
 import java.util.List;
