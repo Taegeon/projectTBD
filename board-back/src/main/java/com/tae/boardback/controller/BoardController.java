@@ -5,6 +5,7 @@ import com.tae.boardback.dto.response.board.PostBoardResponseDto;
 import com.tae.boardback.dto.response.board.PutFavoriteResponseDto;
 import com.tae.boardback.dto.response.board.GetFavoriteListResponseDto;
 import com.tae.boardback.dto.response.board.PostCommentResponseDto;
+import com.tae.boardback.dto.response.board.GetCommentListResponseDto;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -73,6 +74,14 @@ public class BoardController {
         @AuthenticationPrincipal String email
     ) {
         ResponseEntity<? super PostCommentResponseDto> response = boardService.postComment(requestBody, boardNumber, email);
+        return response;
+    }
+
+    @GetMapping("/{boardNumber}/comment-list")
+    public ResponseEntity<? super GetCommentListResponseDto> getCommentList(
+        @PathVariable("boardNumber") Integer boardNumber
+    ) {
+        ResponseEntity<? super GetCommentListResponseDto> response = boardService.getCommentList(boardNumber);
         return response;
     }
 
