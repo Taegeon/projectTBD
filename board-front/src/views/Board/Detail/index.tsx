@@ -5,10 +5,17 @@ import { CommentListItem, FavoriteListItem } from 'types/interface'
 import { commentListMock, favoriteListMock } from 'mocks'
 import CommentItem from 'components/CommentItem'
 import Pagination from 'components/Pagination'
+import defaultProfileImage from 'assets/image/Default_pfp.png'
 
 export default function BoardDetail() {
 
   const BoardDetailTop = () => {
+
+    const [showMore, setShowMore] = useState<boolean>(false);
+
+    const onMoreButtonClickHandler = () => {
+      setShowMore(!showMore);
+    }
 
     return (
       <div id='board-detail-top'>
@@ -16,19 +23,22 @@ export default function BoardDetail() {
           <div className='board-detail-title'>{'오늘 뭐먹지'}</div>
           <div className='board-detail-top-sub-box'>
             <div className='board-detail-write-info-box'>
-              <div className='board-detail-writer-profile-image'></div>
+              <div className='board-detail-writer-profile-image' style={{backgroundImage: `url(${defaultProfileImage})`}}></div>
               <div className='board-detail-writer-nickname'>{'닉네임'}</div>
               <div className='board-detail-info-divider'>{'\|'}</div>
               <div className='board-detail-write-date'>{'2024. 04. 23'}</div>
             </div>
-            <div className='icon-button'>
+            <div className='icon-button' onClick={onMoreButtonClickHandler}>
               <div className='icon more-icon'></div>
             </div>
+            {showMore && 
             <div className='board-detail-more-box'>
               <div className='board-detail-update-button'>{'수정'}</div>
               <div className='divider'></div>
               <div className='board-detail-delete-button'>{'삭제'}</div>
             </div>
+           }
+           
 
           </div>
 
@@ -36,7 +46,7 @@ export default function BoardDetail() {
         <div className='divider'></div>
         <div className='board-detail-top-main'>
           <div className='board-detail-main-text'>{'내용'}</div>
-          <div className='board-detail-main-image'></div>
+          <img className='board-detail-main-image' src='https://hatrabbits.com/wp-content/uploads/2017/01/random.jpg' />
         </div>
 
 
