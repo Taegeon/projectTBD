@@ -9,13 +9,16 @@ import defaultProfileImage from 'assets/image/Default_pfp.png'
 import { useLoginUserStore } from 'stores'
 import { useNavigate, useParams } from 'react-router-dom'
 import { BOARD_PATH, BOARD_UPDATE_PATH, MAIN_PATH, USER_PATH } from 'constant'
-import { getBoardRequest, getCommentListRequest, getFavoriteListRequest, increaseViewCountRequest } from 'apis'
+import { deleteBoardRequest, getBoardRequest, getCommentListRequest, getFavoriteListRequest, increaseViewCountRequest, postCommentRequest, putFavoriteRequest } from 'apis'
 import { ResponseDto } from 'apis/response'
 import GetBoardResponseDto from 'apis/response/board/get-board.response.dto'
-import { GetCommentListResponseDto, GetFavoriteListResponseDto, IncreaseViewCountResponseDto } from 'apis/response/board'
+import { GetCommentListResponseDto, GetFavoriteListResponseDto, IncreaseViewCountResponseDto, PostCommentResponseDto, PutFavoriteResponseDto } from 'apis/response/board'
 
 
 import dayjs from 'dayjs';
+import { useCookies } from 'react-cookie'
+import { PostCommentRequestDto } from 'apis/request/board'
+import DeleteBoardResponseDto from 'apis/response/board/delete-board.response.dto'
 
 
 
@@ -23,6 +26,10 @@ export default function BoardDetail() {
 
   const { boardNumber } = useParams();
   const { loginUser } = useLoginUserStore();
+
+  const [cookies, setCookies] = useCookies();
+
+
 
   const navigator = useNavigate();
 
@@ -82,12 +89,26 @@ export default function BoardDetail() {
       navigator(BOARD_PATH() + '/' + BOARD_UPDATE_PATH(board.boardNumber));
     }
 
+    const deleteBoardResponse = (responseBody: DeleteBoardResponseDto | ResponseDto | null) => {
+      if (!responseBody) return;
+      const { code } = responseBody;
+      if (code === 'VF') alert('잘못된 접근입니다.');
+      if (code === 'NU') alert('존재하지 않는 유저입니다.');
+      if (code === 'NB') alert('존재하지 않는 게시물 입니다.');
+      if (code === 'AF') alert('인증에 실패했습니다.');
+      if (code === 'NP') alert('권한이 없습니다.');
+      if (code === 'DBE') alert('데이터베이스 오류입니다.');
+      if (code !== 'SU') return;
+
+      navigator(MAIN_PATH());
+
+    }
+
     const onDeleteButtonClickHandler = () => {
-      if(!board || !loginUser) return;
+      if(!boardNumber || !board || !loginUser || !cookies.accessToken) return;
       if(loginUser.email !== board.writerEmail) return;
 
-      //TODO
-      navigator(MAIN_PATH());
+      deleteBoardRequest(boardNumber, cookies.accessToken).then(deleteBoardResponse);
     }
 
 
@@ -189,10 +210,47 @@ export default function BoardDetail() {
       setCommentList(commentList);
     }
 
+    const putFavoriteResponse = (responseBody: PutFavoriteResponseDto | ResponseDto | null) => {
+      if (!responseBody) return;
+      const { code } = responseBody;
+      if (code === 'VF') alert('잘못된 접근입니다.');
+      if (code === 'NU') alert('존재하지 않는 유저입니다.');
+      if (code === 'NB') alert('존재하지 않는 게시물 입니다.');
+      if (code === 'AF') alert('인증에 실패했습니다.');
+      if (code === 'DBE') alert('데이터베이스 오류입니다.');
+      if (code !== 'SU') return;
+
+      if (!boardNumber) return;
+      getFavoriteListRequest(boardNumber).then(getFavoriteListResponse);
+    }
+
+
+    const postCommentResponse = (responseBody: PostCommentResponseDto | ResponseDto | null) => {
+      if (!responseBody) return;
+      const { code } = responseBody;
+      if (code === 'VF') alert('잘못된 접근입니다.');
+      if (code === 'NU') alert('존재하지 않는 유저입니다.');
+      if (code === 'NB') alert('존재하지 않는 게시물 입니다.');
+      if (code === 'AF') alert('인증에 실패했습니다.');
+      if (code === 'DBE') alert('데이터베이스 오류입니다.');
+      if (code !== 'SU') return;
+
+      setComment('');
+
+
+      if (!boardNumber) return;
+      getCommentListRequest(boardNumber).then(getCommentListResponse);
+
+
+    }
+
+
 
 
     const onFavoriteClickHandler = () => {
-      setFavorite(!isFavorite);
+      if(!boardNumber || !loginUser || !cookies.accessToken) return;
+      putFavoriteRequest(boardNumber, cookies.accessToken).then(putFavoriteResponse);
+
     }
 
     const onShowFavoriteClickHandler = () => {
@@ -204,7 +262,11 @@ export default function BoardDetail() {
     }
 
     const onCommentSubmitButtonClickHandler = () => {
-      if (!comment) return;
+      if (!comment || !boardNumber || !loginUser || !cookies.accessToken) return;
+      
+      const requestBody: PostCommentRequestDto = { content : comment };
+      postCommentRequest(boardNumber, requestBody, cookies.accessToken).then(postCommentResponse);
+    
     }
 
 

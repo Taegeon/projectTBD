@@ -1,10 +1,11 @@
 import { ResultType } from "@remix-run/router/dist/utils";
 import axios from "axios";
 import { SignInRequestDto, SignUpRequestDto } from "./request/auth";
-import { PostBoardsRequestDto } from "./request/board";
+import { PostBoardsRequestDto, PostCommentRequestDto } from "./request/board";
 import { ResponseDto } from './response';
 import {SignInResponseDto, SignUpResponseDto} from "./response/auth";
-import { PostBoardResponseDto, GetBoardResponseDto, IncreaseViewCountResponseDto, GetFavoriteListResponseDto, GetCommentListResponseDto } from "./response/board";
+import { PostBoardResponseDto, GetBoardResponseDto, IncreaseViewCountResponseDto, GetFavoriteListResponseDto, GetCommentListResponseDto, PutFavoriteResponseDto, PostCommentResponseDto } from "./response/board";
+import DeleteBoardResponseDto from "./response/board/delete-board.response.dto";
 import { GetSignInUserResponseDto } from "./response/user";
 
 const DOMAIN = 'http://localhost:4000';
@@ -55,6 +56,9 @@ const INCREASE_VIEW_COUNT_URL = (boardNumber: number | string ) => `${API_DOMAIN
 const POST_BOARD_URL = () => `${API_DOMAIN}/board`;
 const GET_FAVORITE_LIST_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}/favorite-list`;
 const GET_COMMENT_LIST_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}/comment-list`;
+const PUT_FAVORITE_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}/favorite`;
+const POST_COMMENT_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}/comment`;
+const DELETE_BOARD_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}`;
 
 
 export const getBoardRequest = async (boardNumber: number | string) => {
@@ -130,6 +134,53 @@ export const postBoardRequest = async (requestBody: PostBoardsRequestDto, access
     })
     return result;
 }
+
+export const postCommentRequest = async (boardNumber: number | string, requestBody: PostCommentRequestDto, accessToken: string) => {
+    const result = await axios.post(POST_COMMENT_URL(boardNumber), requestBody, authorization(accessToken))
+    .then(response => {
+        const responseBody: PostCommentResponseDto = response.data;
+        return responseBody;
+    })
+    .catch(error => {
+        if (!error.response) return null;
+        const responseBody: ResponseDto = error.response.data;
+        return responseBody;
+    });
+
+    return result;
+}
+
+
+
+
+export const putFavoriteRequest = async (boardNumber: number | string, accessToken: string) => {
+    const result = await axios.put(PUT_FAVORITE_URL(boardNumber), {}, authorization(accessToken))
+    .then(response => {
+        const responseBody: PutFavoriteResponseDto = response.data;
+        return responseBody;
+    })
+    .catch(error => {
+        if (!error.response) return null;
+        const responseBody: ResponseDto = error.response.data;
+        return responseBody;
+    })
+    return result;
+}
+
+export const deleteBoardRequest = async (boardNumber: number | string, accessToken: string) => {
+    const result = await axios.delete(DELETE_BOARD_URL(boardNumber), authorization(accessToken))
+    .then(response => {
+         const responseBody: DeleteBoardResponseDto = response.data;
+         return responseBody;
+    })
+    .catch(error => {
+        if (!error.response) return null;
+        const responseBody: ResponseDto = error.response.data;
+        return responseBody;
+    })
+    return result;
+}
+
 
 const GET_SIGN_IN_USER_URL = () => `${API_DOMAIN}/user`;
 
