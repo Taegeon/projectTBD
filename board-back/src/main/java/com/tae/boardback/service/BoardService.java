@@ -10,6 +10,7 @@ import com.tae.boardback.dto.response.board.PutFavoriteResponseDto;
 import com.tae.boardback.dto.response.board.GetFavoriteListResponseDto;
 import com.tae.boardback.dto.response.board.PostCommentResponseDto;
 import com.tae.boardback.dto.response.board.GetCommentListResponseDto;
+import com.tae.boardback.dto.response.board.IncreaseViewCountResponseDto;
 
 
 public interface BoardService {
@@ -19,4 +20,5 @@ public interface BoardService {
     ResponseEntity<? super PostBoardResponseDto> postBoard(PostBoardRequestDto dto, String email);
     ResponseEntity<? super PostCommentResponseDto> postComment(PostCommentRequestDto dto, Integer boardNumber, String email);
     ResponseEntity<? super PutFavoriteResponseDto> putFavorite(Integer boardNumber, String email);
+    ResponseEntity<? super IncreaseViewCountResponseDto> increaseViewCount(Integer boardNumber);
 }

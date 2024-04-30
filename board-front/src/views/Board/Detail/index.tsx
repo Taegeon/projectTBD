@@ -9,6 +9,10 @@ import defaultProfileImage from 'assets/image/Default_pfp.png'
 import { useLoginUserStore } from 'stores'
 import { useNavigate, useParams } from 'react-router-dom'
 import { BOARD_PATH, BOARD_UPDATE_PATH, MAIN_PATH, USER_PATH } from 'constant'
+import { getBoardRequest, increaseViewCountRequest } from 'apis'
+import { ResponseDto } from 'apis/response'
+import GetBoardResponseDto from 'apis/response/board/get-board.response.dto'
+import { IncreaseViewCountResponseDto } from 'apis/response/board'
 
 export default function BoardDetail() {
 
@@ -17,10 +21,40 @@ export default function BoardDetail() {
 
   const navigator = useNavigate();
 
+  const increaseViewCountResponse = (responseBody: IncreaseViewCountResponseDto | ResponseDto | null) => {
+    if (!responseBody) return;
+    const { code } = responseBody;
+    if (code==='NB') alert('존재하지 않는 게시물입니다.');
+    if (code==='DBE') alert('데이터베이스 오류입니다.');
+  }
+
   const BoardDetailTop = () => {
 
+    const [isWriter, setWriter] = useState<boolean>(false);
     const [board, setBoard] = useState<Board | null>(null);
     const [showMore, setShowMore] = useState<boolean>(false);
+
+    const getBoardResponse = (responseBody: GetBoardResponseDto | ResponseDto | null) => {
+      if (!responseBody) return;
+      const { code } = responseBody;
+      if (code === 'NB') alert('존재하지 않는 게시물입니다.');
+      if (code ==='DBE') alert('데이터베이스 오류입니다.');
+      if (code !== 'SU') {
+        navigator(MAIN_PATH());
+        return;
+      }
+      const board: Board = {...responseBody as GetBoardResponseDto};
+      setBoard(board);
+
+      if (!loginUser) {
+        setWriter(false);
+        return;
+      }
+
+      const isWriter = loginUser.email === board.writerEmail;
+      setWriter(isWriter);
+    }    
+
 
     const onNicknameClickHandler = () => {
       if (!board) return;
@@ -47,7 +81,12 @@ export default function BoardDetail() {
 
 
     useEffect(() => {
-      setBoard(boardMock);
+      if (!boardNumber) {
+        navigator(MAIN_PATH());
+        return;
+      }
+      getBoardRequest(boardNumber).then(getBoardResponse);
+
     }, [boardNumber]);
 
    if (!board) return <></>
@@ -64,9 +103,12 @@ export default function BoardDetail() {
               <div className='board-detail-info-divider'>{'\|'}</div>
               <div className='board-detail-write-date'>{board.writeDatetime}</div>
             </div>
+            {isWriter &&
             <div className='icon-button' onClick={onMoreButtonClickHandler}>
-              <div className='icon more-icon'></div>
-            </div>
+            <div className='icon more-icon'></div>
+          </div>
+            }
+            
             {showMore && 
             <div className='board-detail-more-box'>
               <div className='board-detail-update-button' onClick={onUpadteButtonClickHandler} >{'수정'}</div>
@@ -220,7 +262,15 @@ export default function BoardDetail() {
     )
   }
 
-
+  let effectFlag = true;
+  useEffect(() => {
+    if (!boardNumber) return;
+    if (effectFlag) {
+      effectFlag = false;
+      return;
+    }
+    increaseViewCountRequest(boardNumber).then(increaseViewCountResponse);
+  }, [boardNumber])
 
   return (
     <div id='board-detail-wrapper'>
