@@ -8,6 +8,8 @@ import com.tae.boardback.dto.response.board.PostCommentResponseDto;
 import com.tae.boardback.dto.response.board.GetCommentListResponseDto;
 import com.tae.boardback.dto.response.board.IncreaseViewCountResponseDto;
 import com.tae.boardback.dto.response.board.DeleteBoardResponseDto;
+import com.tae.boardback.dto.response.board.PatchBoardResponseDto;
+
 
 import org.apache.catalina.connector.Response;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.tae.boardback.dto.request.board.PatchBoardRequestDto;
 import com.tae.boardback.dto.request.board.PostBoardRequestDto;
 import com.tae.boardback.dto.request.board.PostCommentRequestDto;
 import com.tae.boardback.service.BoardService;
@@ -104,6 +107,17 @@ public class BoardController {
         @AuthenticationPrincipal String email
     ) {
         ResponseEntity<? super DeleteBoardResponseDto> response = boardService.deleteBoard(boardNumber, email);
+        return response;
+    }
+
+
+    @PatchMapping("/{boardNumber}")
+    public ResponseEntity<? super PatchBoardResponseDto> patchBoard (
+        @RequestBody @Valid PatchBoardRequestDto requestBody,
+        @PathVariable("boardNumber") Integer boardNumber,
+        @AuthenticationPrincipal String email
+    ) {
+        ResponseEntity<? super PatchBoardResponseDto> response = boardService.patchBoard(requestBody, boardNumber, email);
         return response;
     }
 
