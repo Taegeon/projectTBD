@@ -1,0 +1,18 @@
+export const converUrlToFile = async (url: string) => {
+    const response = await fetch(url);
+    const data = await response.blob();
+    const extend = url.split('.').pop();
+    const fileName = url.split('/').pop();
+    const meta = {type: `iamge/${extend}`};
+
+    return new File([data], fileName as string, meta);
+};
+
+export const converUrlsToFile = async (urls: string[]) => {
+    const files: File[] = [];
+    for (const url of urls) {
+        const file = await converUrlToFile(url);
+        files.push(file);
+    }
+    return files;
+}
