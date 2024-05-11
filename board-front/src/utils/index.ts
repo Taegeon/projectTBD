@@ -1,4 +1,4 @@
-export const converUrlToFile = async (url: string) => {
+export const convertUrlToFile = async (url: string) => {
     const response = await fetch(url);
     const data = await response.blob();
     const extend = url.split('.').pop();
@@ -8,10 +8,10 @@ export const converUrlToFile = async (url: string) => {
     return new File([data], fileName as string, meta);
 };
 
-export const converUrlsToFile = async (urls: string[]) => {
+export const convertUrlsToFile = async (urls: string[]) => {
     const files: File[] = [];
     for (const url of urls) {
-        const file = await converUrlToFile(url);
+        const file = await convertUrlToFile(url);
         files.push(file);
     }
     return files;

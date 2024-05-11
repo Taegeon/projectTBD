@@ -6,7 +6,7 @@ import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
 import { useCookies } from 'react-cookie';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useBoardStore, useLoginUserStore } from 'stores';
-import { converUrlsToFile } from 'utils';
+import { convertUrlsToFile } from 'utils';
 import './style.css'
 
 export default function BoardWrite() {
@@ -47,7 +47,7 @@ export default function BoardWrite() {
       setTitle(title);
       setContent(content);
       setImageUrls(boardImageList);
-      converUrlsToFile(boardImageList).then(boardImageFileList => setBoardImageFileList(boardImageFileList));
+      convertUrlsToFile(boardImageList).then(boardImageFileList => setBoardImageFileList(boardImageFileList));
 
       if (!loginUser || loginUser.email !== writerEmail) {
         navigate(MAIN_PATH());
@@ -55,8 +55,8 @@ export default function BoardWrite() {
       }
 
       if(!contentRef.current) return;
-    contentRef.current.style.height = 'auto';
-    contentRef.current.style.height = `${contentRef.current.scrollHeight}px`;
+      contentRef.current.style.height = 'auto';
+      contentRef.current.style.height = `${contentRef.current.scrollHeight}px`;
   }
 
 
@@ -124,7 +124,7 @@ export default function BoardWrite() {
     }
     if (!boardNumber) return;
     getBoardRequest(boardNumber).then(getBoardResponse);
-  }, []);
+  }, [boardNumber]);
 
 
   return (

@@ -3,6 +3,7 @@ package com.tae.boardback.dto.request.board;
 import java.util.List;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,7 +16,7 @@ public class PatchBoardRequestDto {
     private String title;
     @NotBlank
     private String content;
-    @NotBlank
+    @NotNull
     private List<String> boardImageList;
     
 }

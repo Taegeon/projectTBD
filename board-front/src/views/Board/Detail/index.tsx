@@ -32,7 +32,7 @@ export default function BoardDetail() {
 
 
 
-  const navigator = useNavigate();
+  const navigate = useNavigate();
 
   const increaseViewCountResponse = (responseBody: IncreaseViewCountResponseDto | ResponseDto | null) => {
     if (!responseBody) return;
@@ -59,7 +59,7 @@ export default function BoardDetail() {
       if (code === 'NB') alert('존재하지 않는 게시물입니다.');
       if (code ==='DBE') alert('데이터베이스 오류입니다.');
       if (code !== 'SU') {
-        navigator(MAIN_PATH());
+        navigate(MAIN_PATH());
         return;
       }
       const board: Board = {...responseBody as GetBoardResponseDto};
@@ -77,7 +77,7 @@ export default function BoardDetail() {
 
     const onNicknameClickHandler = () => {
       if (!board) return;
-      navigator(USER_PATH(board.writerEmail));
+      navigate(USER_PATH(board.writerEmail));
     }
 
     const onMoreButtonClickHandler = () => {
@@ -87,7 +87,7 @@ export default function BoardDetail() {
     const onUpadteButtonClickHandler = () => {
       if(!board || !loginUser) return;
       if(loginUser.email !== board.writerEmail) return;
-      navigator(BOARD_PATH() + '/' + BOARD_UPDATE_PATH(board.boardNumber));
+      navigate(BOARD_PATH() + '/' + BOARD_UPDATE_PATH(board.boardNumber));
     }
 
     const deleteBoardResponse = (responseBody: DeleteBoardResponseDto | ResponseDto | null) => {
@@ -101,7 +101,7 @@ export default function BoardDetail() {
       if (code === 'DBE') alert('데이터베이스 오류입니다.');
       if (code !== 'SU') return;
 
-      navigator(MAIN_PATH());
+      navigate(MAIN_PATH());
 
     }
 
@@ -115,7 +115,7 @@ export default function BoardDetail() {
 
     useEffect(() => {
       if (!boardNumber) {
-        navigator(MAIN_PATH());
+        navigate(MAIN_PATH());
         return;
       }
       getBoardRequest(boardNumber).then(getBoardResponse);

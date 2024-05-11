@@ -1,10 +1,10 @@
 import { ResultType } from "@remix-run/router/dist/utils";
 import axios from "axios";
 import { SignInRequestDto, SignUpRequestDto } from "./request/auth";
-import { PostBoardsRequestDto, PostCommentRequestDto } from "./request/board";
+import { PatchBoardRequestDto, PostBoardsRequestDto, PostCommentRequestDto } from "./request/board";
 import { ResponseDto } from './response';
 import {SignInResponseDto, SignUpResponseDto} from "./response/auth";
-import { PostBoardResponseDto, GetBoardResponseDto, IncreaseViewCountResponseDto, GetFavoriteListResponseDto, GetCommentListResponseDto, PutFavoriteResponseDto, PostCommentResponseDto } from "./response/board";
+import { PostBoardResponseDto, GetBoardResponseDto, IncreaseViewCountResponseDto, GetFavoriteListResponseDto, GetCommentListResponseDto, PutFavoriteResponseDto, PostCommentResponseDto, PatchBoardResponseDto } from "./response/board";
 import DeleteBoardResponseDto from "./response/board/delete-board.response.dto";
 import { GetSignInUserResponseDto } from "./response/user";
 
@@ -59,6 +59,7 @@ const GET_COMMENT_LIST_URL = (boardNumber: number | string) => `${API_DOMAIN}/bo
 const PUT_FAVORITE_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}/favorite`;
 const POST_COMMENT_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}/comment`;
 const DELETE_BOARD_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}`;
+const PATCH_BOARD_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}`;
 
 
 export const getBoardRequest = async (boardNumber: number | string) => {
@@ -167,6 +168,21 @@ export const putFavoriteRequest = async (boardNumber: number | string, accessTok
     return result;
 }
 
+export const patchBoardRequest = async (boardNumber: number | string, requestBody: PatchBoardRequestDto, accessToken: string) => {
+    const result = await axios.patch(PATCH_BOARD_URL(boardNumber), requestBody, authorization(accessToken))
+    .then(response => {
+        const responseBody : PatchBoardResponseDto = response.data;
+        return responseBody;
+    })
+    .catch(error => {
+        if (!error.response) return null;
+        const responseBody: ResponseDto = error.response.data;
+        return responseBody;
+
+    });
+    return result;
+}
+
 export const deleteBoardRequest = async (boardNumber: number | string, accessToken: string) => {
     const result = await axios.delete(DELETE_BOARD_URL(boardNumber), authorization(accessToken))
     .then(response => {
@@ -216,3 +232,5 @@ export const fileUploadRequest = async (data: FormData) => {
 
     return result;
 }
+
+

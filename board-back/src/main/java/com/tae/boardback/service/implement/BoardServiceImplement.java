@@ -255,11 +255,10 @@ public class BoardServiceImplement implements BoardService{
 
 
     @Override
-    public ResponseEntity<? super PatchBoardResponseDto> patchBoard(PatchBoardRequestDto dto, Integer boardNumber,
-            String email) {
+    public ResponseEntity<? super PatchBoardResponseDto> patchBoard(PatchBoardRequestDto dto, Integer boardNumber, String email) {
                 try {
                     BoardEntity boardEntity = boardRepository.findByBoardNumber(boardNumber);
-                    if (boardEntity == null) return PatchBoardResponseDto.noExistedBoard();
+                    if (boardEntity == null) return PatchBoardResponseDto.noExistBoard();
 
                     boolean existedUser = userRepository.existsByEmail(email);
                     if (!existedUser) return PatchBoardResponseDto.noExistUser();

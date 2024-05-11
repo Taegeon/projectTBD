@@ -16,11 +16,11 @@ export default function BoardList({boardListItem}: Props) {
     const {writeDatetime, writeNickname, writerProfileImage} = boardListItem;
 
     //function: naviagte
-    //const navigator = useNavigate();
+    //const navigate = useNavigate();
 
     //event handler : clicking board item event handling
     const onClickHandler = () => {
-        //navigator(boardNumber);
+        //navigate(boardNumber);
     }
 
     //
