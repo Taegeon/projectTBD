@@ -14,6 +14,8 @@ import com.tae.boardback.dto.response.board.GetCommentListResponseDto;
 import com.tae.boardback.dto.response.board.IncreaseViewCountResponseDto;
 import com.tae.boardback.dto.response.board.DeleteBoardResponseDto;
 import com.tae.boardback.dto.response.board.PatchBoardResponseDto;
+import com.tae.boardback.dto.response.board.GetLatestBoardListResponseDto;
+
 
 
 
@@ -27,4 +29,5 @@ public interface BoardService {
     ResponseEntity<? super IncreaseViewCountResponseDto> increaseViewCount(Integer boardNumber);
     ResponseEntity<? super DeleteBoardResponseDto> deleteBoard(Integer boardNumber, String email);
     ResponseEntity<? super PatchBoardResponseDto> patchBoard(PatchBoardRequestDto dto, Integer boardNumber, String email);
+    ResponseEntity<? super GetLatestBoardListResponseDto> getLatestBoardList();
 }

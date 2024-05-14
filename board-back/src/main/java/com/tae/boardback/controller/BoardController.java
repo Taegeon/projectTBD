@@ -9,6 +9,7 @@ import com.tae.boardback.dto.response.board.GetCommentListResponseDto;
 import com.tae.boardback.dto.response.board.IncreaseViewCountResponseDto;
 import com.tae.boardback.dto.response.board.DeleteBoardResponseDto;
 import com.tae.boardback.dto.response.board.PatchBoardResponseDto;
+import com.tae.boardback.dto.response.board.GetLatestBoardListResponseDto;
 
 
 import org.apache.catalina.connector.Response;
@@ -119,6 +120,13 @@ public class BoardController {
     ) {
         ResponseEntity<? super PatchBoardResponseDto> response = boardService.patchBoard(requestBody, boardNumber, email);
         return response;
+    }
+
+    @GetMapping("/latest-list")
+    public ResponseEntity<? super GetLatestBoardListResponseDto> getLatestBoardList() {
+        ResponseEntity<? super GetLatestBoardListResponseDto> response = boardService.getLatestBoardList();
+        return response;
+
     }
 
 }
