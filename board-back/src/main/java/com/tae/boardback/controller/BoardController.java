@@ -10,9 +10,9 @@ import com.tae.boardback.dto.response.board.IncreaseViewCountResponseDto;
 import com.tae.boardback.dto.response.board.DeleteBoardResponseDto;
 import com.tae.boardback.dto.response.board.PatchBoardResponseDto;
 import com.tae.boardback.dto.response.board.GetLatestBoardListResponseDto;
+import com.tae.boardback.dto.response.board.GetTop3BoardListResponseDto;
 
 
-import org.apache.catalina.connector.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -126,7 +126,13 @@ public class BoardController {
     public ResponseEntity<? super GetLatestBoardListResponseDto> getLatestBoardList() {
         ResponseEntity<? super GetLatestBoardListResponseDto> response = boardService.getLatestBoardList();
         return response;
-
     }
+
+    @GetMapping("/top-3")
+    public ResponseEntity<? super GetTop3BoardListResponseDto> getTop3BoardList() {
+        ResponseEntity<? super GetTop3BoardListResponseDto> response = boardService.getTop3BoardList();
+        return response;
+    }
+
 
 }
