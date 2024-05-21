@@ -5,8 +5,13 @@ import { latestBoardListMock, top3BoardListMock } from 'mocks';
 import React, { useEffect, useState } from 'react'
 import { BoardListItem } from 'types/interface';
 import './style.css'
+import { useNavigate } from 'react-router-dom';
+import { SEARCH_PATH } from 'constant';
 
 export default function Main() {
+
+  const navigate = useNavigate();
+
 
   // 메인화면 상단 컴포넌트
   const MainTop = () => {
@@ -20,7 +25,7 @@ export default function Main() {
     return (
       <div id='main-top-wrapper'>
         <div className='main-top-container'>
-          <div className='main-top-intro'>{'인트로 페이지 입니다.'}</div>
+          <div className='main-top-title'>{'인트로 페이지 입니다.'}</div>
           <div className='main-top-contents-box'>
             <div className='main-top-contents-title'>{'임시 타이틀 입니다.'}</div>
             <div className='main-top-contents'>
@@ -39,25 +44,32 @@ export default function Main() {
     const [currentBoardList, setCurrentBoardList] = useState<BoardListItem[]>([]);
     const [popularWordList, setPopularWordList] = useState<string[]>([]);
 
+    const onPopularWordClickHandler = (word: string) => {
+      navigate(SEARCH_PATH(word));
+    }
+
+
+
     useEffect(() => {
       setCurrentBoardList(latestBoardListMock);
       setPopularWordList(['안녕', '잘가', '하이']);
     }, []);
+
     return (
       <div id='main-bottom-wrapper'>
         <div className='main-bottom-container'>
           <div className='main-bottom-title'>{'최신 게시물'}</div>
-          <div className='main-bottom-contents--box'>
+          <div className='main-bottom-contents-box'>
             <div className='main-bottom-current-contents'>
               {currentBoardList.map(boardListItem => <BoardItem boardListItem={boardListItem}/>)}
               
             </div>
             <div className='main-bottom-popular-box'>
               <div className='main-bottom-popular-card'>
-                <div className='main-bottom-popular-card-box'>
+                <div className='main-bottom-popular-card-container'>
                   <div className='main-bottom-popular-card-title'>{'인기 검색어'}</div>
                   <div className='main-bottom-popular-card-contents'>
-                    {popularWordList.map(word => <div className='word-badge'>{word}</div>)}
+                    {popularWordList.map(word => <div className='word-badge' onClick={() => onPopularWordClickHandler(word)}>{word}</div>)}
                     
                   </div>
                 </div>

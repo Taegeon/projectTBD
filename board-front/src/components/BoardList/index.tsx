@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { BoardListItem } from 'types/interface'
 import './style.css'
 import DefaultProfileImage from 'assets/image/Default_pfp.png'
+import { BOARD_DETAIL_PATH, BOARD_PATH } from 'constant';
 
 interface Props {
     boardListItem: BoardListItem
@@ -16,11 +17,11 @@ export default function BoardList({boardListItem}: Props) {
     const {writeDatetime, writeNickname, writerProfileImage} = boardListItem;
 
     //function: naviagte
-    //const navigate = useNavigate();
+    const navigate = useNavigate();
 
     //event handler : clicking board item event handling
     const onClickHandler = () => {
-        //navigate(boardNumber);
+        navigate(BOARD_PATH() + '/' + BOARD_DETAIL_PATH(boardNumber));
     }
 
     //
