@@ -3,10 +3,16 @@ import BoardItem from 'components/BoardList'
 
 import { latestBoardListMock, top3BoardListMock } from 'mocks';
 import React, { useEffect, useState } from 'react'
-import { BoardListItem } from 'types/interface';
+import { Board, BoardListItem } from 'types/interface';
 import './style.css'
 import { useNavigate } from 'react-router-dom';
 import { SEARCH_PATH } from 'constant';
+import { getLatesteBoardListRequest, getPopularListRequest, getTop3BoardListRequest } from 'apis';
+import { GetLatestBoardListResponseDto, GetTop3BoardListResponseDto } from 'apis/response/board';
+import { ResponseDto } from 'apis/response';
+import { usePagination } from 'hooks';
+import Pagination from 'components/Pagination';
+import { GetPopularListResponseDto } from 'apis/response/search';
 
 export default function Main() {
 
@@ -18,8 +24,19 @@ export default function Main() {
 
     const [top3BoardList, setTop3BoardList] = useState<BoardListItem[]>([]);
 
+    const getTop3BoardListResponse = (responseBody: GetTop3BoardListResponseDto | ResponseDto | null) => {
+      if (!responseBody) return;
+      const {code} = responseBody;
+      if (code === 'DBE') alert('데이터베이스 오류입니다.');
+      if (code !== 'SU') return;
+
+      const { top3List } = responseBody as GetTop3BoardListResponseDto;
+      setTop3BoardList(top3List);
+    }
+
+
     useEffect(() => {
-      setTop3BoardList(top3BoardListMock);
+      getTop3BoardListRequest().then(getTop3BoardListResponse);
     }, []);
 
     return (
@@ -41,18 +58,51 @@ export default function Main() {
 
   // 메인화면 하단 컴포넌트
   const MainBottom = () => {
-    const [currentBoardList, setCurrentBoardList] = useState<BoardListItem[]>([]);
+
+
+    const {
+      currentPage,
+      setCurrentPage,
+      currentSection,
+      setCurrentSection,
+      viewList,
+      viewPageList,
+      totalSection,
+      setTotalList
+  } = usePagination<BoardListItem>(5);
+
+
     const [popularWordList, setPopularWordList] = useState<string[]>([]);
+
+    const getLatesteBoardListResponse = (responseBody: GetLatestBoardListResponseDto | ResponseDto | null) => {
+      if (!responseBody) return;
+      const { code } = responseBody;
+      if (code === 'DBE') alert('데이터베이스 오류입니다.');
+      if (code !== 'SU') return;
+
+      const { latestList } = responseBody as GetLatestBoardListResponseDto;
+      setTotalList(latestList);
+    }
+
+    const getPopularListResponse = (responseBody: GetPopularListResponseDto | ResponseDto | null) => {
+      if (!responseBody) return;
+      const {code} = responseBody;
+      if (code === 'DBE') alert('데이터베이스 오류입니다.');
+      if (code !== 'SU') return;
+
+      const {popularWordList} = responseBody as GetPopularListResponseDto;
+      setPopularWordList(popularWordList);
+    }
+
 
     const onPopularWordClickHandler = (word: string) => {
       navigate(SEARCH_PATH(word));
     }
 
 
-
     useEffect(() => {
-      setCurrentBoardList(latestBoardListMock);
-      setPopularWordList(['안녕', '잘가', '하이']);
+      getLatesteBoardListRequest().then(getLatesteBoardListResponse);
+      getPopularListRequest().then(getPopularListResponse);
     }, []);
 
     return (
@@ -61,7 +111,7 @@ export default function Main() {
           <div className='main-bottom-title'>{'최신 게시물'}</div>
           <div className='main-bottom-contents-box'>
             <div className='main-bottom-current-contents'>
-              {currentBoardList.map(boardListItem => <BoardItem boardListItem={boardListItem}/>)}
+              {viewList.map(boardListItem => <BoardItem boardListItem={boardListItem}/>)}
               
             </div>
             <div className='main-bottom-popular-box'>
@@ -76,7 +126,16 @@ export default function Main() {
               </div>
             </div>
           </div>
-          <div className='main-bottom-pagination-box'></div>
+          <div className='main-bottom-pagination-box'>
+            <Pagination 
+              currentPage={currentPage}
+              currentSection = {currentSection}
+              setCurrentPage = {setCurrentPage}
+              setCurrentSection = {setCurrentSection}
+              viewPageList = {viewPageList}
+              totalSection = {totalSection}
+            />
+          </div>
         </div>
       </div>
     )
