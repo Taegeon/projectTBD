@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.core.annotation.MergedAnnotations.Search;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,7 @@ import com.tae.boardback.dto.response.board.GetBoardResponseDto;
 import com.tae.boardback.dto.response.board.GetCommentListResponseDto;
 import com.tae.boardback.dto.response.board.GetFavoriteListResponseDto;
 import com.tae.boardback.dto.response.board.GetLatestBoardListResponseDto;
+import com.tae.boardback.dto.response.board.GetSearchBoardListResponseDto;
 import com.tae.boardback.dto.response.board.GetTop3BoardListResponseDto;
 import com.tae.boardback.dto.response.board.IncreaseViewCountResponseDto;
 import com.tae.boardback.dto.response.board.PatchBoardResponseDto;
@@ -30,11 +32,13 @@ import com.tae.boardback.entity.BoardListViewEntity;
 import com.tae.boardback.entity.CommentEntity;
 import com.tae.boardback.entity.FavoriteEntity;
 import com.tae.boardback.entity.ImageEntity;
+import com.tae.boardback.entity.SearchLogEntity;
 import com.tae.boardback.repository.BoardListViewRepository;
 import com.tae.boardback.repository.BoardRepository;
 import com.tae.boardback.repository.CommendRepository;
 import com.tae.boardback.repository.FavoriteRepository;
 import com.tae.boardback.repository.ImageRepository;
+import com.tae.boardback.repository.SearchLogRepository;
 import com.tae.boardback.repository.UserRepository;
 import com.tae.boardback.repository.resultSet.GetBoardResultSet;
 import com.tae.boardback.repository.resultSet.GetCommentListResultSet;
@@ -53,7 +57,7 @@ public class BoardServiceImplement implements BoardService{
     private final FavoriteRepository favoriteRepository;
     private final CommendRepository commentRepository; // it's commentRepository, just a typo, need to fix later
     private final BoardListViewRepository boardListViewRepository;
-
+    private final SearchLogRepository searchLogRepository;
 
     @Override
     public ResponseEntity<? super GetBoardResponseDto> getBoard(Integer boardNumber) {
@@ -339,6 +343,31 @@ public class BoardServiceImplement implements BoardService{
 
     }
 
- 
-    
+
+
+    @Override
+    public ResponseEntity<? super GetSearchBoardListResponseDto> getSearchBoardList(String searchWord, String preSearchWord) {
+        List<BoardListViewEntity> boardListViewEntities = new ArrayList<>();
+
+        try {
+            boardListViewEntities = boardListViewRepository.findByTitleContainsOrContentContainsOrderByWriteDatetimeDesc(searchWord, searchWord);
+            SearchLogEntity searchLogEntity = new SearchLogEntity(searchWord, preSearchWord, false);
+            searchLogRepository.save(searchLogEntity);
+            boolean relation = preSearchWord != null;
+
+            if(relation) {
+                searchLogEntity = new SearchLogEntity(preSearchWord, searchWord, relation);
+                searchLogRepository.save(searchLogEntity);
+            }
+
+
+
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+        return GetSearchBoardListResponseDto.success(boardListViewEntities);
+      
+    }
 }

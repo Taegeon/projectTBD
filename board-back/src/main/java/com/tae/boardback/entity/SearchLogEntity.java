@@ -8,16 +8,22 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
+//I made typo that searh_log should be search_log
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name="search_log")
-@Table(name="search_log")
+@Entity(name="searh_log")
+@Table(name="searh_log")
 public class SearchLogEntity {
     @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int sequence;
     private String searchWord;
     private String relationWord;
     private boolean relation;
+
+    public SearchLogEntity(String searchWord, String relationWord, boolean relation) {
+        this.searchWord = searchWord;
+        this.relationWord = relationWord;
+        this.relation = relation;
+    }
 }
