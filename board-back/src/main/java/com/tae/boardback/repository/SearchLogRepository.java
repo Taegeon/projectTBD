@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.tae.boardback.entity.SearchLogEntity;
 import com.tae.boardback.repository.resultSet.GetPopularListResultSet;
+import com.tae.boardback.repository.resultSet.GetRelationListResultSet;
 
 import org.springframework.data.jpa.repository.Query;
 
@@ -25,5 +26,18 @@ public interface SearchLogRepository extends JpaRepository<SearchLogEntity, Inte
 
         )
     List<GetPopularListResultSet> getPopluarList();
+
+    @Query(
+        value =
+        "SELECT relation_word as searchWord, count(relation_word) AS count " +
+        "FROM searh_log " +
+        "WHERE search_word = ?1 " +
+        "AND relation_word IS NOT NULL " +
+        "GROUP BY relation_word " +
+        "ORDER BY count DESC " +
+        "LIMIT 15; ",
+        nativeQuery = true
+    )
+    List<GetRelationListResultSet> getRelationList(String searchWord);
 
 }
