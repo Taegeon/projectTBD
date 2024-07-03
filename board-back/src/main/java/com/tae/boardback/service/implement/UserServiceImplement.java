@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.tae.boardback.dto.response.ResponseDto;
 import com.tae.boardback.dto.response.user.GetSignInUserResponseDto;
+import com.tae.boardback.dto.response.user.GetUserResponseDto;
 import com.tae.boardback.entity.UserEntity;
 import com.tae.boardback.repository.UserRepository;
 import com.tae.boardback.service.UserService;
@@ -32,6 +33,24 @@ public class UserServiceImplement implements UserService{
         }
         return GetSignInUserResponseDto.success(userEntity);
 
+    }
+
+
+
+    @Override
+    public ResponseEntity<? super GetUserResponseDto> getUser(String email) {
+        UserEntity userEntity = null;
+
+        try {
+            userEntity = userRepository.findByEmail(email);
+            if (userEntity == null) return GetUserResponseDto.noExistUser();
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+
+        return GetUserResponseDto.success(userEntity);
     }
     
 }

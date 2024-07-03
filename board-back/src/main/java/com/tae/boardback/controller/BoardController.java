@@ -12,7 +12,7 @@ import com.tae.boardback.dto.response.board.PatchBoardResponseDto;
 import com.tae.boardback.dto.response.board.GetLatestBoardListResponseDto;
 import com.tae.boardback.dto.response.board.GetTop3BoardListResponseDto;
 import com.tae.boardback.dto.response.board.GetSearchBoardListResponseDto;
-
+import com.tae.boardback.dto.response.board.GetUserBoardListResponseDto;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -141,6 +141,14 @@ public class BoardController {
         @PathVariable(value="preSearchWord", required=false) String preSearchWord
     ) {
         ResponseEntity<? super GetSearchBoardListResponseDto> response = boardService.getSearchBoardList(searchWord, preSearchWord);
+        return response;
+    }
+
+    @GetMapping("/user-board-list/{email}")
+    public ResponseEntity<? super GetUserBoardListResponseDto> getUserBoardList(
+        @PathVariable("email") String email
+    ) {
+        ResponseEntity<? super GetUserBoardListResponseDto> response = boardService.getUserBoardList(email);
         return response;
     }
 
