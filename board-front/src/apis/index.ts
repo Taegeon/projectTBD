@@ -4,9 +4,9 @@ import { SignInRequestDto, SignUpRequestDto } from "./request/auth";
 import { PatchBoardRequestDto, PostBoardsRequestDto, PostCommentRequestDto } from "./request/board";
 import { ResponseDto } from './response';
 import {SignInResponseDto, SignUpResponseDto} from "./response/auth";
-import { PostBoardResponseDto, GetBoardResponseDto, IncreaseViewCountResponseDto, GetFavoriteListResponseDto, GetCommentListResponseDto, PutFavoriteResponseDto, PostCommentResponseDto, PatchBoardResponseDto, GetLatestBoardListResponseDto, GetTop3BoardListResponseDto } from "./response/board";
+import { PostBoardResponseDto, GetBoardResponseDto, IncreaseViewCountResponseDto, GetFavoriteListResponseDto, GetCommentListResponseDto, PutFavoriteResponseDto, PostCommentResponseDto, PatchBoardResponseDto, GetLatestBoardListResponseDto, GetTop3BoardListResponseDto, GetSearchBoardListResponseDto } from "./response/board";
 import DeleteBoardResponseDto from "./response/board/delete-board.response.dto";
-import { GetPopularListResponseDto } from "./response/search";
+import { GetPopularListResponseDto, GetRelationListResponseDto } from "./response/search";
 import { GetSignInUserResponseDto } from "./response/user";
 
 const DOMAIN = 'http://localhost:4000';
@@ -63,7 +63,7 @@ const PUT_FAVORITE_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/
 const POST_COMMENT_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}/comment`;
 const DELETE_BOARD_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}`;
 const PATCH_BOARD_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}`;
-
+const GET_SEARCH_BOARD_LIST_URL = (searchWord: string, preSearchWord: string | null) => `${API_DOMAIN}/board/search-list/${searchWord}${preSearchWord ? '/' + preSearchWord : ''}`;
 
 export const getBoardRequest = async (boardNumber: number | string) => {
     const result = await axios.get(GET_BOARD_URL(boardNumber))
@@ -230,6 +230,7 @@ export const deleteBoardRequest = async (boardNumber: number | string, accessTok
 }
 
 const GET_POPULAR_LIST_URL = () => `${API_DOMAIN}/search/popular-list`;
+const GET_RELATION_LIST_URL = (searchWord: string) => `${API_DOMAIN}/search/${searchWord}/relation-list`;
 
 export const getPopularListRequest = async () => {
     const result = await axios.get(GET_POPULAR_LIST_URL())
@@ -244,7 +245,19 @@ export const getPopularListRequest = async () => {
     });
     return result;
 }
-
+export const getRelationListRequest = async (searchWord: string) => {
+    const result = await axios.get(GET_RELATION_LIST_URL(searchWord))
+    .then(response => {
+        const responseBody: GetRelationListResponseDto = response.data;
+        return responseBody;
+    })
+    .catch(error => {
+        if (!error.response) return null;
+        const responseBody: ResponseDto = error.response.data;
+        return responseBody;
+    });
+    return result;
+}
 
 
 const GET_SIGN_IN_USER_URL = () => `${API_DOMAIN}/user`;
@@ -282,4 +295,16 @@ export const fileUploadRequest = async (data: FormData) => {
     return result;
 }
 
-
+export const getSearchBoardListRequest = async (searchWord: string, preSearchWord: string | null) => {
+    const result = await axios.get(GET_SEARCH_BOARD_LIST_URL(searchWord, preSearchWord))
+    .then(response => {
+        const responseBody: GetSearchBoardListResponseDto = response.data;
+        return responseBody;
+    })
+    .catch(error => {
+        if(!error.response) return null;
+        const responseBody: ResponseDto = error.response.data;
+        return responseBody;
+    });
+    return result;
+}

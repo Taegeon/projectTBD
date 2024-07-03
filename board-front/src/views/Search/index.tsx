@@ -5,24 +5,53 @@ import { BoardListItem } from 'types/interface';
 import './style.css'
 import BoardItem from 'components/BoardList'
 import { SEARCH_PATH } from 'constant';
+import { getSearchBoardListRequest } from 'apis';
+import { GetSearchBoardListResponseDto } from 'apis/response/board';
+import { ResponseDto } from 'apis/response';
+import { usePagination } from 'hooks';
+import Pagination from 'components/Pagination';
+import { GetRelationListResponseDto } from 'apis/response/search';
 
 export default function Search() {
 
   const { searchWord } = useParams();
   const [count, setCount] = useState<number>(0);
-  const [searchBoardList, setSearchBoardList] = useState<BoardListItem[]>([]);
-  const [relationList, setRelationList] = useState<string[]>([]);
+  const [relativeWordList, setRelationWordList] = useState<string[]>([]);
+  const [preSearchWord, setPreSearchWord] = useState<string | null>(null);
+  const { currentPage, currentSection, viewList, viewPageList, totalSection, setCurrentPage, setCurrentSection, setTotalList} = usePagination<BoardListItem>(5);
 
   const navigate = useNavigate();
+  const getSearchBoardListResponse = (responseBody: GetSearchBoardListResponseDto | ResponseDto | null) => {
+    if (!responseBody) return;
+    const { code } = responseBody;
+    if (code === 'DBE') alert('데이터베이스 오류입니다.');
+    if (code !== 'SU') return;
 
+    if (!searchWord) return;
+    const { searchList } = responseBody as GetSearchBoardListResponseDto;
+    setTotalList(searchList);
+    setCount(searchList.length);
+    setPreSearchWord(searchWord);
+  }
+  const getRelationListResponse = (responseBody: GetRelationListResponseDto | ResponseDto | null) => {
+      if (!responseBody) return;
+      const { code } = responseBody;
+      if (code === 'DBE') alert('데이터베이스 오류입니다.');
+      if (code !== 'SU') return;
+
+      const { relativeWordList } = responseBody as GetRelationListResponseDto;
+      setRelationWordList(relativeWordList)
+
+  }
 
   const onRelationWordClickHandler = (word: string) => {
     navigate(SEARCH_PATH(word));
   }
 
+  //searchword 상태 변경 시 마다 실행될 함수
   useEffect(() => {
-    setSearchBoardList(latestBoardListMock)
-    setRelationList(['안녕', '테스트'])
+    if (!searchWord) return;
+    getSearchBoardListRequest(searchWord, preSearchWord).then(getSearchBoardListResponse);
   }, [searchWord]);
 
 
@@ -38,7 +67,7 @@ export default function Search() {
           {count === 0?
           <div className='search-contents-nothing'> {'검색 결과가 없습니다.'}</div> :
             <div className='search-contents'>
-            {searchBoardList.map(boardListItem => <BoardItem boardListItem={boardListItem} />)}
+            {viewList.map(boardListItem => <BoardItem boardListItem={boardListItem} />)}
             </div>
           }
           
@@ -47,11 +76,11 @@ export default function Search() {
               <div className='search-relation-card-container'>
                 <div className='search-relation-card-title'>{'관련 검색어'}</div>
 
-                {relationList.length === 0 ? 
+                {relativeWordList.length === 0 ? 
                   <div className='search-relation-card-contents-nothing'>{'관련 검색어가 없습니다.'}</div> :
                   <div className='search-relation-card-contents'>
                   
-                  {relationList.map(word => <div className='word-badge' onClick={() => onRelationWordClickHandler(word)}>{word}</div>)}
+                  {relativeWordList.map(word => <div className='word-badge' onClick={() => onRelationWordClickHandler(word)}>{word}</div>)}
 
 
                   </div>
@@ -62,6 +91,15 @@ export default function Search() {
           </div>
         </div>
         <div className='search-pagination-box'>
+          {count !== 0 &&
+          <Pagination
+            currentPage={currentPage}
+            currentSection={currentSection}
+            setCurrentPage={setCurrentPage}
+            setCurrentSection={setCurrentSection}
+            viewPageList={viewPageList}
+            totalSection={totalSection}
+          />}
         </div>
       </div>
     </div>
